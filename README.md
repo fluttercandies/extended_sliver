@@ -8,8 +8,6 @@ Language: English | [中文简体](README-ZH.md)
 
 A powerful extension library of Sliver, which include SliverPinnedPersistentHeader, SliverPinnedToBoxAdapter and ExtendedSliverAppbar.
 
-[Web demo for extended_sliver](https://fluttercandies.github.io/extended_sliver/)
-
 - [extended_sliver](#extended_sliver)
   - [Description](#description)
   - [Usage](#usage)
@@ -35,7 +33,7 @@ Download with `flutter packages get`
 
 ## SliverPinnedPersistentHeader
 
-It's the same as `SliverPersistentHeader(pinned: true)`, but you don't have to force values of minExtent and maxExtent. 
+It's the same as `SliverPersistentHeader(pinned: true)`, but you don't have to force values of minExtent and maxExtent.
 
 It provides `minExtentProtoType` and `maxExtentProtoType` to calculate minExtent and maxExtent automatically.
 

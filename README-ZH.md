@@ -8,8 +8,6 @@
 
 强大的Sliver扩展库, 包括 SliverPinnedPersistentHeader, SliverPinnedToBoxAdapter 和 ExtendedSliverAppbar.
 
-[Web 例子 for extended_sliver](https://fluttercandies.github.io/extended_sliver/)
-
 - [extended_sliver](#extended_sliver)
   - [描述](#描述)
   - [使用](#使用)
@@ -24,7 +22,7 @@
 
 ### 添加引用
 
-添加引用到 `pubspec.yaml` 下面的 `dependencies` 
+添加引用到 `pubspec.yaml` 下面的 `dependencies`
 
 ```yaml
 dependencies:
