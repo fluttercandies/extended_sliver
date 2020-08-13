@@ -2,44 +2,44 @@
 
 [![pub package](https://img.shields.io/pub/v/extended_sliver.svg)](https://pub.dartlang.org/packages/extended_sliver) [![GitHub stars](https://img.shields.io/github/stars/fluttercandies/extended_sliver)](https://github.com/fluttercandies/extended_sliver/stargazers) [![GitHub forks](https://img.shields.io/github/forks/fluttercandies/extended_sliver)](https://github.com/fluttercandies/extended_sliver/network) [![GitHub license](https://img.shields.io/github/license/fluttercandies/extended_sliver)](https://github.com/fluttercandies/extended_sliver/blob/master/LICENSE) [![GitHub issues](https://img.shields.io/github/issues/fluttercandies/extended_sliver)](https://github.com/fluttercandies/extended_sliver/issues) <a target="_blank" href="https://jq.qq.com/?_wv=1027&k=5bcc0gy"><img border="0" src="https://pub.idqqimg.com/wpa/images/group.png" alt="flutter-candies" title="flutter-candies"></a>
 
-Language: English | [中文简体](README-ZH.md)
+语言: [English](README.md) | 中文简体
 
-## Description
+## 描述
 
-A powerful extension library of Sliver, which include SliverPinnedPersistentHeader, SliverPinnedToBoxAdapter and ExtendedSliverAppbar.
+强大的Sliver扩展库, 包括 SliverPinnedPersistentHeader, SliverPinnedToBoxAdapter 和 ExtendedSliverAppbar.
 
-[Web demo for extended_sliver](https://fluttercandies.github.io/extended_sliver/)
+[Web 例子 for extended_sliver](https://fluttercandies.github.io/extended_sliver/)
 
 - [extended_sliver](#extended_sliver)
-  - [Description](#description)
-  - [Usage](#usage)
-    - [Add packages to dependencies](#add-packages-to-dependencies)
+  - [描述](#描述)
+  - [使用](#使用)
+    - [添加引用](#添加引用)
   - [SliverPinnedPersistentHeader](#sliverpinnedpersistentheader)
   - [SliverPinnedToBoxAdapter](#sliverpinnedtoboxadapter)
   - [ExtendedSliverAppbar](#extendedsliverappbar)
-  - [Complex Demo](#complex-demo)
+  - [复杂的例子](#复杂的例子)
 
 
-## Usage
+## 使用
 
-### Add packages to dependencies
+### 添加引用
 
-Add the package to  `pubspec.yaml` under `dependencies`.
+添加引用到 `pubspec.yaml` 下面的 `dependencies` 
 
 ```yaml
 dependencies:
   extended_sliver: latest-version
 ```
 
-Download with `flutter packages get`
+执行 `flutter packages get` 下载
 
 ## SliverPinnedPersistentHeader
 
-It's the same as `SliverPersistentHeader(pinned: true)`, but you don't have to force values of minExtent and maxExtent. 
+跟官方的`SliverPersistentHeader(pinned: true)`一样, 不同的是你不需要去设置 minExtent 和 maxExtent。
 
-It provides `minExtentProtoType` and `maxExtentProtoType` to calculate minExtent and maxExtent automatically.
+它是通过设置 `minExtentProtoType` 和 `maxExtentProtoType` 来计算 minExtent 和 maxExtent。
 
-It's useful that you don't know the final extent before the widgets are laid out.
+当Widget没有layout之前，你没法知道Widget的实际大小，这将是非常有用的组件。
 
 ```dart
     SliverPinnedPersistentHeader(
@@ -71,9 +71,9 @@ It's useful that you don't know the final extent before the widgets are laid out
 ```
 ## SliverPinnedToBoxAdapter
 
-You can create a pinned Sliver easily with it.
+你可以轻松创建一个锁定的Sliver。
 
-It's useful that you don't know the final extent before the child are laid out.
+当child没有layout之前，你没法知道child的实际大小，这将是非常有用的组件。
 
 ```dart
     SliverPinnedToBoxAdapter(
@@ -99,7 +99,7 @@ It's useful that you don't know the final extent before the child are laid out.
 ```
 ## ExtendedSliverAppbar
 
-You can create SliverAppbar with out force the expandedHeight.
+你可以创建一个SliverAppbar，不用去设置expandedHeight。
 
 ```dart
 return CustomScrollView(
@@ -129,11 +129,11 @@ return CustomScrollView(
 );
 ```
 
-## Complex Demo
+## 复杂的例子
 
-[Complex Demo](https://github.com/fluttercandies/extended_sliver/blob/master/example/lib/pages/complex/home_page.dart)
+[例子地址](https://github.com/fluttercandies/extended_sliver/blob/master/example/lib/pages/complex/home_page.dart)
 
-![image](https://github.com/fluttercandies/flutter_candies/blob/master/gif/extended_sliver/extended_sliver.gif)
+![image](http://zmtzawqlp.gitee.io/my_images/images/extended_sliver/extended_sliver.gif)
 
 
 

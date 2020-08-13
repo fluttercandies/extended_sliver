@@ -35,7 +35,8 @@ class MyApp extends StatelessWidget {
             builder: (Widget child, RouteResult result) {
           if (settings.name == Routes.fluttercandiesMainpage ||
               settings.name == Routes.fluttercandiesDemogrouppage ||
-              settings.name == Routes.fluttercandiesPersonalPage) {
+              settings.name == Routes.fluttercandiesHomePage ||
+              settings.name == Routes.fluttercandiesSliverAppbar) {
             return child;
           }
           return CommonWidget(

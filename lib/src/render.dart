@@ -287,6 +287,7 @@ class RenderSliverPinnedPersistentHeader extends RenderSliver
   }
 }
 
+/// A pinned [RenderSliver] that contains a single [RenderBox].
 class RenderSliverPinnedToBoxAdapter extends RenderSliverSingleBoxAdapter {
   /// Creates a [RenderSliver] that wraps a [RenderBox].
   RenderSliverPinnedToBoxAdapter({

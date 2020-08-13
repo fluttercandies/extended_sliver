@@ -5,10 +5,11 @@
 
 import 'package:flutter/widgets.dart';
 
-import 'pages/complex/personal_page.dart';
+import 'pages/complex/homel_page.dart';
 import 'pages/main_page.dart';
 import 'pages/simple/pinned_box.dart';
 import 'pages/simple/pinned_header.dart';
+import 'pages/simple/sliver_app_bar.dart';
 
 // ignore_for_file: argument_type_not_assignable
 RouteResult getRouteResult({String name, Map<String, dynamic> arguments}) {
@@ -37,19 +38,27 @@ RouteResult getRouteResult({String name, Map<String, dynamic> arguments}) {
         ),
         routeName: 'DemoGroupPage',
       );
+    case 'fluttercandies://homePage':
+      return RouteResult(
+        name: name,
+        widget: HomePage(),
+        routeName: 'HomePage',
+        description: 'how to use extended_sliver in reality.',
+        exts: <String, dynamic>{'group': 'Complex', 'order': 0},
+      );
     case 'fluttercandies://mainpage':
       return RouteResult(
         name: name,
         widget: MainPage(),
         routeName: 'MainPage',
       );
-    case 'fluttercandies://personalPage':
+    case 'fluttercandies://sliverAppbar':
       return RouteResult(
         name: name,
-        widget: PersonalPage(),
-        routeName: 'personal',
-        description: 'how to use extended_sliver in ',
-        exts: <String, dynamic>{'group': 'Complex', 'order': 0},
+        widget: SliverAppbarDemo(),
+        routeName: 'SliverAppbar',
+        description: 'extended SliverAppbar.',
+        exts: <String, dynamic>{'group': 'Simple', 'order': 2},
       );
     default:
       return const RouteResult(name: 'flutterCandies://notfound');

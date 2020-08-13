@@ -6,8 +6,9 @@ const List<String> routeNames = <String>[
   'fluttercandies://PinnedBox',
   'fluttercandies://PinnedHeader',
   'fluttercandies://demogrouppage',
+  'fluttercandies://homePage',
   'fluttercandies://mainpage',
-  'fluttercandies://personalPage',
+  'fluttercandies://sliverAppbar',
 ];
 
 class Routes {
@@ -48,6 +49,17 @@ class Routes {
   static const String fluttercandiesDemogrouppage =
       'fluttercandies://demogrouppage';
 
+  /// 'how to use extended_sliver in reality.'
+  ///
+  /// [name] : 'fluttercandies://homePage'
+  ///
+  /// [routeName] : 'HomePage'
+  ///
+  /// [description] : 'how to use extended_sliver in reality.'
+  ///
+  /// [exts] : {group: Complex, order: 0}
+  static const String fluttercandiesHomePage = 'fluttercandies://homePage';
+
   /// 'MainPage'
   ///
   /// [name] : 'fluttercandies://mainpage'
@@ -55,15 +67,15 @@ class Routes {
   /// [routeName] : 'MainPage'
   static const String fluttercandiesMainpage = 'fluttercandies://mainpage';
 
-  /// 'how to use extended_sliver in '
+  /// 'extended SliverAppbar.'
   ///
-  /// [name] : 'fluttercandies://personalPage'
+  /// [name] : 'fluttercandies://sliverAppbar'
   ///
-  /// [routeName] : 'personal'
+  /// [routeName] : 'SliverAppbar'
   ///
-  /// [description] : 'how to use extended_sliver in '
+  /// [description] : 'extended SliverAppbar.'
   ///
-  /// [exts] : {group: Complex, order: 0}
-  static const String fluttercandiesPersonalPage =
-      'fluttercandies://personalPage';
+  /// [exts] : {group: Simple, order: 2}
+  static const String fluttercandiesSliverAppbar =
+      'fluttercandies://sliverAppbar';
 }

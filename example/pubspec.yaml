@@ -12,8 +12,8 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^0.1.2
-  url_launcher: 5.3.0  
-  pull_to_refresh_notification: any  
+  url_launcher: 5.3.0
+  pull_to_refresh_notification: any
   extended_sliver:
     path: ../
 

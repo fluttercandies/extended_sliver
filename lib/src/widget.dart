@@ -4,24 +4,89 @@ import 'package:flutter/widgets.dart';
 import 'element.dart';
 import 'render.dart';
 
+/// Delegate for configuring a [SliverPinnedPersistentHeader].
 abstract class SliverPinnedPersistentHeaderDelegate {
   SliverPinnedPersistentHeaderDelegate({
     @required this.minExtentProtoType,
     @required this.maxExtentProtoType,
   })  : assert(minExtentProtoType != null),
         assert(maxExtentProtoType != null);
+
+  /// The poroto type widget of min extent
   final Widget minExtentProtoType;
+
+  /// The poroto type widget of max extent
   final Widget maxExtentProtoType;
 
+  /// The widget to place inside the [SliverPinnedPersistentHeader].
+  ///
+  /// The `context` is the [BuildContext] of the sliver.
+  ///
+  /// The `shrinkOffset` is a distance from [maxExtent] towards [minExtent]
+  /// representing the current amount by which the sliver has been shrunk. When
+  /// the `shrinkOffset` is zero, the contents will be rendered with a dimension
+  /// of [maxExtent] in the main axis. When `shrinkOffset` equals the difference
+  /// between [maxExtent] and [minExtent] (a positive number), the contents will
+  /// be rendered with a dimension of [minExtent] in the main axis. The
+  /// `shrinkOffset` will always be a positive number in that range.
+  ///
+  /// The `overlapsContent` argument is true if subsequent slivers (if any) will
+  /// be rendered beneath this one, and false if the sliver will not have any
+  /// contents below it. Typically this is used to decide whether to draw a
+  /// shadow to simulate the sliver being above the contents below it. Typically
+  /// this is true when `shrinkOffset` is at its greatest value and false
+  /// otherwise, but that is not guaranteed. See [NestedScrollView] for an
+  /// example of a case where `overlapsContent`'s value can be unrelated to
+  /// `shrinkOffset`.
+  ///
+  /// The 'minExtent'is the smallest size to allow the header to reach, when it shrinks at the
+  /// start of the viewport.
+  ///
+  /// This must return a value equal to or less than [maxExtent].
+  ///
+  /// This value should not change over the lifetime of the delegate. It should
+  /// be based entirely on the constructor arguments passed to the delegate. See
+  /// [shouldRebuild], which must return true if a new delegate would return a
+  /// different value.
+  ///
+  ///
+  /// The `maxExtent` argument is the size of the header when it is not shrinking at the top of the
+  /// viewport.
+  ///
+  /// This must return a value equal to or greater than [minExtent].
+  ///
+  /// This value should not change over the lifetime of the delegate. It should
+  /// be based entirely on the constructor arguments passed to the delegate. See
+  /// [shouldRebuild], which must return true if a new delegate would return a
+  /// different value.
   Widget build(BuildContext context, double shrinkOffset, double minExtent,
       double maxExtent, bool overlapsContent);
 
+  /// Whether this delegate is meaningfully different from the old delegate.
+  ///
+  /// If this returns false, then the header might not be rebuilt, even though
+  /// the instance of the delegate changed.
+  ///
+  /// This must return true if `oldDelegate` and this object would return
+  /// different values for [minExtent], [maxExtent], [snapConfiguration], or
+  /// would return a meaningfully different widget tree from [build] for the
+  /// same arguments.
   bool shouldRebuild(
       covariant SliverPinnedPersistentHeaderDelegate oldDelegate);
 }
 
+/// A sliver whose size varies when the sliver is scrolled to the leading edge
+/// of the viewport.
+///
+/// This is the layout primitive that [ExtendedSliverAppbar] uses for its
+/// shrinking/growing effect.
 class SliverPinnedPersistentHeader extends StatelessWidget {
-  const SliverPinnedPersistentHeader({@required this.delegate});
+  /// Creates a sliver that varies its size when it is scrolled to the start of
+  /// a viewport.
+  ///
+  /// The [delegate] must not be null.
+  const SliverPinnedPersistentHeader({@required this.delegate})
+      : assert(delegate != null);
   final SliverPinnedPersistentHeaderDelegate delegate;
   @override
   Widget build(BuildContext context) {
@@ -45,6 +110,18 @@ class SliverPinnedPersistentHeaderRenderObjectWidget
   }
 }
 
+/// A pinned sliver that contains a single box widget.
+///
+/// Slivers are special-purpose widgets that can be combined using a
+/// [CustomScrollView] to create custom scroll effects. A [SliverToBoxAdapter]
+/// is a basic sliver that creates a bridge back to one of the usual box-based
+/// widgets.
+///
+/// Rather than using multiple [SliverToBoxAdapter] widgets to display multiple
+/// box widgets in a [CustomScrollView], consider using [SliverList],
+/// [SliverFixedExtentList], [SliverPrototypeExtentList], or [SliverGrid],
+/// which are more efficient because they instantiate only those children that
+/// are actually visible through the scroll view's viewport.
 class SliverPinnedToBoxAdapter extends SingleChildRenderObjectWidget {
   /// Creates a pinned sliver that contains a single box widget.
   const SliverPinnedToBoxAdapter({
@@ -57,30 +134,56 @@ class SliverPinnedToBoxAdapter extends SingleChildRenderObjectWidget {
       RenderSliverPinnedToBoxAdapter();
 }
 
+/// A material design app bar that integrates with a [CustomScrollView].
+/// See more [SliverPinnedPersistentHeader].
 class ExtendedSliverAppbar extends StatelessWidget {
   const ExtendedSliverAppbar({
-    this.actions,
     this.leading,
     this.title,
+    this.actions,
     this.background,
     this.toolBarColor,
     this.onBuild,
+    this.statusbarHeight,
+    this.toolbarHeight,
   });
-  final Widget actions;
+
+  /// A widget to display before the [title].
   final Widget leading;
+
+  /// The primary widget displayed in the app bar.
+  ///
+  /// Typically a [Text] widget containing a description of the current contents
+  /// of the app.
   final Widget title;
+
+  /// Widgets to display after the [title] widget.
+  final Widget actions;
+
+  /// A Widget to display behind [leading],[title],[actions].
   final Widget background;
+
+  /// Background color for Row(leading,title,background).
   final Color toolBarColor;
+
+  /// Call when re-build on scroll.
   final OnSliverPinnedPersistentHeaderDelegateBuild onBuild;
+
+  /// Height of Toolbar. Default value : kToolbarHeight
+  final double toolbarHeight;
+
+  /// Height of Statusbar. Default value : MediaQuery.of(context).padding.top
+  final double statusbarHeight;
   @override
   Widget build(BuildContext context) {
     final SafeArea safeArea = context.findAncestorWidgetOfExactType<SafeArea>();
-    double statusBarHeight = 0;
+    double statusbarHeight = this.statusbarHeight ?? 0;
+    final double toolbarHeight = this.toolbarHeight ?? kToolbarHeight;
     if (safeArea == null || !safeArea.top) {
-      statusBarHeight = MediaQuery.of(context).padding.top;
+      statusbarHeight = MediaQuery.of(context).padding.top;
     }
     final Widget toolbar = SizedBox(
-      height: kToolbarHeight + statusBarHeight,
+      height: toolbarHeight + statusbarHeight,
     );
 
     return SliverPinnedPersistentHeader(
@@ -91,7 +194,10 @@ class ExtendedSliverAppbar extends StatelessWidget {
         leading: leading,
         actions: actions,
         background: background,
-        statusBarHeight: statusBarHeight,
+        statusbarHeight: statusbarHeight,
+        toolbarHeight: toolbarHeight,
+        toolBarColor: toolBarColor,
+        onBuild: onBuild,
       ),
     );
   }
@@ -102,24 +208,45 @@ class _ExtendedSliverAppbarDelegate
   _ExtendedSliverAppbarDelegate({
     @required Widget minExtentProtoType,
     @required Widget maxExtentProtoType,
-    this.actions,
     this.leading,
     this.title,
+    this.actions,
     this.background,
-    this.statusBarHeight,
     this.toolBarColor,
     this.onBuild,
+    this.statusbarHeight,
+    this.toolbarHeight,
   }) : super(
           minExtentProtoType: minExtentProtoType,
           maxExtentProtoType: maxExtentProtoType,
         );
-  final Widget actions;
+
+  /// A widget to display before the [title].
   final Widget leading;
+
+  /// The primary widget displayed in the app bar.
+  ///
+  /// Typically a [Text] widget containing a description of the current contents
+  /// of the app.
   final Widget title;
+
+  /// Widgets to display after the [title] widget.
+  final Widget actions;
+
+  /// A Widget to display behind [leading],[title],[actions].
   final Widget background;
-  final double statusBarHeight;
+
+  /// Background color for Row(leading,title,background).
   final Color toolBarColor;
+
+  /// Call when re-build on scroll.
   final OnSliverPinnedPersistentHeaderDelegateBuild onBuild;
+
+  /// Height of Toolbar. Default value : kToolbarHeight
+  final double toolbarHeight;
+
+  /// Height of Statusbar. Default value : MediaQuery.of(context).padding.top
+  final double statusbarHeight;
   @override
   Widget build(
     BuildContext context,
@@ -142,8 +269,8 @@ class _ExtendedSliverAppbarDelegate
     }
     final ThemeData theme = Theme.of(context);
     final Widget toolbar = Container(
-      height: kToolbarHeight + statusBarHeight,
-      padding: EdgeInsets.only(top: statusBarHeight),
+      height: toolbarHeight + statusbarHeight,
+      padding: EdgeInsets.only(top: statusbarHeight),
       color: (toolBarColor ?? theme.primaryColor).withOpacity(opacity),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -195,12 +322,12 @@ class _ExtendedSliverAppbarDelegate
             oldDelegate.title != title ||
             oldDelegate.actions != actions ||
             oldDelegate.background != background ||
-            oldDelegate.statusBarHeight != statusBarHeight ||
+            oldDelegate.statusbarHeight != statusbarHeight ||
             oldDelegate.toolBarColor != toolBarColor);
   }
 }
 
-///call when shrinkOffset is changed.
+///Call when re-build on scroll
 typedef OnSliverPinnedPersistentHeaderDelegateBuild = void Function(
   BuildContext context,
   double shrinkOffset,
