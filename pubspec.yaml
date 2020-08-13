@@ -1,8 +1,7 @@
 name: extended_sliver
-description: A new Flutter package project.
+description: A powerful extension library of Sliver, which include SliverPinnedPersistentHeader, SliverPinnedToBoxAdapter and ExtendedSliverAppbar.
 version: 0.1.0
-author:
-homepage:
+homepage: https://github.com/fluttercandies/extended_sliver
 
 environment:
   sdk: ">=2.6.0 <3.0.0"
