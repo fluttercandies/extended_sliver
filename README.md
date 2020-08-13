@@ -129,7 +129,7 @@ return CustomScrollView(
 
 ## Complex Demo
 
-[Complex Demo](https://github.com/fluttercandies/extended_sliver/blob/master/package/example/lib/pages/complex/home_page.dart)
+[Complex Demo](https://github.com/fluttercandies/extended_sliver/blob/master/example/lib/pages/complex/home_page.dart)
 
 ![image](https://github.com/fluttercandies/flutter_candies/blob/master/gif/extended_sliver/extended_sliver.gif)
 

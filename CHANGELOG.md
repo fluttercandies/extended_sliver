@@ -1,3 +1,7 @@
+## [0.3.0]
+
+* Auto Release.
+
 ## [0.2.0]
 
 * Auto Release.
