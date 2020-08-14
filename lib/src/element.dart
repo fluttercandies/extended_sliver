@@ -77,8 +77,6 @@ class SliverPinnedPersistentHeaderElement extends RenderObjectElement {
   void forgetChild(Element child) {
     assert(child == this.child);
     this.child = null;
-    // 1.20 @mustCallSuper.
-    super.forgetChild(child);
   }
 
   @override
