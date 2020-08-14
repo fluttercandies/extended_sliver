@@ -323,7 +323,9 @@ class _ExtendedSliverAppbarDelegate
             oldDelegate.actions != actions ||
             oldDelegate.background != background ||
             oldDelegate.statusbarHeight != statusbarHeight ||
-            oldDelegate.toolBarColor != toolBarColor);
+            oldDelegate.toolBarColor != toolBarColor ||
+            oldDelegate.toolbarHeight != toolbarHeight ||
+            oldDelegate.onBuild != onBuild);
   }
 }
 
