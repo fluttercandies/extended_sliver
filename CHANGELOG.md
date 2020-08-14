@@ -1,3 +1,7 @@
+## [1.0.1]
+
+* Correct shouldRebuild.
+
 ## [1.0.0]
 
 * Change Flutter SDK version to 1.20.0 and provide 1.12.13 branch.
