@@ -5,7 +5,7 @@
 
 import 'package:flutter/widgets.dart';
 
-import 'pages/complex/homel_page.dart';
+import 'pages/complex/home_page.dart';
 import 'pages/main_page.dart';
 import 'pages/simple/pinned_box.dart';
 import 'pages/simple/pinned_header.dart';
