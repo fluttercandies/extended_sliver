@@ -9,7 +9,8 @@ abstract class SliverPinnedPersistentHeaderDelegate {
   SliverPinnedPersistentHeaderDelegate({
     @required this.minExtentProtoType,
     @required this.maxExtentProtoType,
-  })  : assert(minExtentProtoType != null),
+  })
+      : assert(minExtentProtoType != null),
         assert(maxExtentProtoType != null);
 
   /// The poroto type widget of min extent
@@ -88,6 +89,7 @@ class SliverPinnedPersistentHeader extends StatelessWidget {
   const SliverPinnedPersistentHeader({@required this.delegate})
       : assert(delegate != null);
   final SliverPinnedPersistentHeaderDelegate delegate;
+
   @override
   Widget build(BuildContext context) {
     return SliverPinnedPersistentHeaderRenderObjectWidget(delegate);
@@ -97,6 +99,7 @@ class SliverPinnedPersistentHeader extends StatelessWidget {
 class SliverPinnedPersistentHeaderRenderObjectWidget
     extends RenderObjectWidget {
   const SliverPinnedPersistentHeaderRenderObjectWidget(this.delegate);
+
   final SliverPinnedPersistentHeaderDelegate delegate;
 
   @override
@@ -146,6 +149,7 @@ class ExtendedSliverAppbar extends StatelessWidget {
     this.onBuild,
     this.statusbarHeight,
     this.toolbarHeight,
+    this.snap
   });
 
   /// A widget to display before the [title].
@@ -174,13 +178,20 @@ class ExtendedSliverAppbar extends StatelessWidget {
 
   /// Height of Statusbar. Default value : MediaQuery.of(context).padding.top
   final double statusbarHeight;
+
+  ///
+  final bool snap;
+
   @override
   Widget build(BuildContext context) {
     final SafeArea safeArea = context.findAncestorWidgetOfExactType<SafeArea>();
     double statusbarHeight = this.statusbarHeight ?? 0;
     final double toolbarHeight = this.toolbarHeight ?? kToolbarHeight;
     if (safeArea == null || !safeArea.top) {
-      statusbarHeight = MediaQuery.of(context).padding.top;
+      statusbarHeight = MediaQuery
+          .of(context)
+          .padding
+          .top;
     }
     final Widget toolbar = SizedBox(
       height: toolbarHeight + statusbarHeight,
@@ -198,6 +209,7 @@ class ExtendedSliverAppbar extends StatelessWidget {
         toolbarHeight: toolbarHeight,
         toolBarColor: toolBarColor,
         onBuild: onBuild,
+        onBuild: snap,
       ),
     );
   }
@@ -216,10 +228,11 @@ class _ExtendedSliverAppbarDelegate
     this.onBuild,
     this.statusbarHeight,
     this.toolbarHeight,
+    this.snap,
   }) : super(
-          minExtentProtoType: minExtentProtoType,
-          maxExtentProtoType: maxExtentProtoType,
-        );
+    minExtentProtoType: minExtentProtoType,
+    maxExtentProtoType: maxExtentProtoType,
+  );
 
   /// A widget to display before the [title].
   final Widget leading;
@@ -247,17 +260,19 @@ class _ExtendedSliverAppbarDelegate
 
   /// Height of Statusbar. Default value : MediaQuery.of(context).padding.top
   final double statusbarHeight;
+
+  /// 
+  final bool snap;
+
   @override
-  Widget build(
-    BuildContext context,
-    double shrinkOffset,
-    double minExtent,
-    double maxExtent,
-    bool overlapsContent,
-  ) {
+  Widget build(BuildContext context,
+      double shrinkOffset,
+      double minExtent,
+      double maxExtent,
+      bool overlapsContent,) {
     onBuild?.call(context, shrinkOffset, minExtent, maxExtent, overlapsContent);
     final double opacity =
-        (shrinkOffset / (maxExtent - minExtent)).clamp(0.0, 1.0) as double;
+    (shrinkOffset / (maxExtent - minExtent)).clamp(0.0, 1.0) as double;
     Widget titleWidget = title;
     if (titleWidget != null) {
       titleWidget = Opacity(
@@ -271,7 +286,8 @@ class _ExtendedSliverAppbarDelegate
     final Widget toolbar = Container(
       height: toolbarHeight + statusbarHeight,
       padding: EdgeInsets.only(top: statusbarHeight),
-      color: (toolBarColor ?? theme.primaryColor).withOpacity(opacity),
+      color: snap ? (toolBarColor ?? theme.primaryColor) : (toolBarColor ??
+          theme.primaryColor).withOpacity(opacity),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -325,15 +341,17 @@ class _ExtendedSliverAppbarDelegate
             oldDelegate.statusbarHeight != statusbarHeight ||
             oldDelegate.toolBarColor != toolBarColor ||
             oldDelegate.toolbarHeight != toolbarHeight ||
-            oldDelegate.onBuild != onBuild);
+            oldDelegate.onBuild != onBuild ||
+            oldDelegate.snap != snap
+        );
   }
 }
 
 ///Call when re-build on scroll
 typedef OnSliverPinnedPersistentHeaderDelegateBuild = void Function(
-  BuildContext context,
-  double shrinkOffset,
-  double minExtent,
-  double maxExtent,
-  bool overlapsContent,
-);
+    BuildContext context,
+    double shrinkOffset,
+    double minExtent,
+    double maxExtent,
+    bool overlapsContent,
+    );
