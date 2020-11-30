@@ -9,8 +9,7 @@ abstract class SliverPinnedPersistentHeaderDelegate {
   SliverPinnedPersistentHeaderDelegate({
     @required this.minExtentProtoType,
     @required this.maxExtentProtoType,
-  })
-      : assert(minExtentProtoType != null),
+  })  : assert(minExtentProtoType != null),
         assert(maxExtentProtoType != null);
 
   /// The poroto type widget of min extent
@@ -89,7 +88,6 @@ class SliverPinnedPersistentHeader extends StatelessWidget {
   const SliverPinnedPersistentHeader({@required this.delegate})
       : assert(delegate != null);
   final SliverPinnedPersistentHeaderDelegate delegate;
-
   @override
   Widget build(BuildContext context) {
     return SliverPinnedPersistentHeaderRenderObjectWidget(delegate);
@@ -99,7 +97,6 @@ class SliverPinnedPersistentHeader extends StatelessWidget {
 class SliverPinnedPersistentHeaderRenderObjectWidget
     extends RenderObjectWidget {
   const SliverPinnedPersistentHeaderRenderObjectWidget(this.delegate);
-
   final SliverPinnedPersistentHeaderDelegate delegate;
 
   @override
@@ -149,7 +146,7 @@ class ExtendedSliverAppbar extends StatelessWidget {
     this.onBuild,
     this.statusbarHeight,
     this.toolbarHeight,
-    this.snap
+    this.snap,
   });
 
   /// A widget to display before the [title].
@@ -179,19 +176,15 @@ class ExtendedSliverAppbar extends StatelessWidget {
   /// Height of Statusbar. Default value : MediaQuery.of(context).padding.top
   final double statusbarHeight;
 
-  ///
+  /// Disable toolbar Transparency changes
   final bool snap;
-
   @override
   Widget build(BuildContext context) {
     final SafeArea safeArea = context.findAncestorWidgetOfExactType<SafeArea>();
     double statusbarHeight = this.statusbarHeight ?? 0;
     final double toolbarHeight = this.toolbarHeight ?? kToolbarHeight;
     if (safeArea == null || !safeArea.top) {
-      statusbarHeight = MediaQuery
-          .of(context)
-          .padding
-          .top;
+      statusbarHeight = MediaQuery.of(context).padding.top;
     }
     final Widget toolbar = SizedBox(
       height: toolbarHeight + statusbarHeight,
@@ -209,7 +202,7 @@ class ExtendedSliverAppbar extends StatelessWidget {
         toolbarHeight: toolbarHeight,
         toolBarColor: toolBarColor,
         onBuild: onBuild,
-        onBuild: snap,
+        snap: snap,
       ),
     );
   }
@@ -261,15 +254,16 @@ class _ExtendedSliverAppbarDelegate
   /// Height of Statusbar. Default value : MediaQuery.of(context).padding.top
   final double statusbarHeight;
 
-  /// 
+  /// Disable toolbar Transparency changes
   final bool snap;
-
   @override
-  Widget build(BuildContext context,
+  Widget build(
+      BuildContext context,
       double shrinkOffset,
       double minExtent,
       double maxExtent,
-      bool overlapsContent,) {
+      bool overlapsContent,
+      ) {
     onBuild?.call(context, shrinkOffset, minExtent, maxExtent, overlapsContent);
     final double opacity =
     (shrinkOffset / (maxExtent - minExtent)).clamp(0.0, 1.0) as double;
@@ -343,8 +337,7 @@ class _ExtendedSliverAppbarDelegate
             oldDelegate.toolBarColor != toolBarColor ||
             oldDelegate.toolbarHeight != toolbarHeight ||
             oldDelegate.onBuild != onBuild ||
-            oldDelegate.snap != snap
-        );
+            oldDelegate.snap != snap);
   }
 }
 
