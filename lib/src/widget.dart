@@ -286,8 +286,9 @@ class _ExtendedSliverAppbarDelegate
     final Widget toolbar = Container(
       height: toolbarHeight + statusbarHeight,
       padding: EdgeInsets.only(top: statusbarHeight),
-      color: snap ? (toolBarColor ?? theme.primaryColor) : (toolBarColor ??
-          theme.primaryColor).withOpacity(opacity),
+      color: snap == true
+          ? (toolBarColor ?? theme.primaryColor)
+          : (toolBarColor ?? theme.primaryColor).withOpacity(opacity),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
