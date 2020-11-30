@@ -146,6 +146,7 @@ class ExtendedSliverAppbar extends StatelessWidget {
     this.onBuild,
     this.statusbarHeight,
     this.toolbarHeight,
+    this.floating,
     this.opaqueToolBar,
   });
 
@@ -175,7 +176,10 @@ class ExtendedSliverAppbar extends StatelessWidget {
 
   /// Height of Statusbar. Default value : MediaQuery.of(context).padding.top
   final double statusbarHeight;
-  
+
+  /// Hide title with slide
+  final bool floating;
+
   /// Disable toolbar Transparency changes
   final bool opaqueToolBar;
   @override
@@ -202,6 +206,7 @@ class ExtendedSliverAppbar extends StatelessWidget {
         toolbarHeight: toolbarHeight,
         toolBarColor: toolBarColor,
         onBuild: onBuild,
+        floating: floating,
         opaqueToolBar: opaqueToolBar,
       ),
     );
@@ -221,6 +226,7 @@ class _ExtendedSliverAppbarDelegate
     this.onBuild,
     this.statusbarHeight,
     this.toolbarHeight,
+    this.floating,
     this.opaqueToolBar,
   }) : super(
           minExtentProtoType: minExtentProtoType,
@@ -253,7 +259,10 @@ class _ExtendedSliverAppbarDelegate
 
   /// Height of Statusbar. Default value : MediaQuery.of(context).padding.top
   final double statusbarHeight;
-  
+
+  /// Hide title with slide
+  final bool floating;
+
   /// Disable toolbar Transparency changes
   final bool opaqueToolBar;
   @override
@@ -269,10 +278,8 @@ class _ExtendedSliverAppbarDelegate
         (shrinkOffset / (maxExtent - minExtent)).clamp(0.0, 1.0) as double;
     Widget titleWidget = title;
     if (titleWidget != null) {
-      titleWidget = Opacity(
-        opacity: opacity,
-        child: titleWidget,
-      );
+      if (floating != false)
+         titleWidget = Opacity(opacity: opacity, child: titleWidget); 
     } else {
       titleWidget = Container();
     }
@@ -337,6 +344,7 @@ class _ExtendedSliverAppbarDelegate
             oldDelegate.toolBarColor != toolBarColor ||
             oldDelegate.toolbarHeight != toolbarHeight ||
             oldDelegate.onBuild != onBuild ||
+            oldDelegate.floating != floating ||
             oldDelegate.opaqueToolBar != opaqueToolBar);
   }
 }
