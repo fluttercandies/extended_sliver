@@ -146,6 +146,7 @@ class ExtendedSliverAppbar extends StatelessWidget {
     this.onBuild,
     this.statusbarHeight,
     this.toolbarHeight,
+    this.opaqueToolBar,
   });
 
   /// A widget to display before the [title].
@@ -174,6 +175,9 @@ class ExtendedSliverAppbar extends StatelessWidget {
 
   /// Height of Statusbar. Default value : MediaQuery.of(context).padding.top
   final double statusbarHeight;
+  
+  /// Disable toolbar Transparency changes
+  final bool opaqueToolBar;
   @override
   Widget build(BuildContext context) {
     final SafeArea safeArea = context.findAncestorWidgetOfExactType<SafeArea>();
@@ -198,6 +202,7 @@ class ExtendedSliverAppbar extends StatelessWidget {
         toolbarHeight: toolbarHeight,
         toolBarColor: toolBarColor,
         onBuild: onBuild,
+        opaqueToolBar: opaqueToolBar,
       ),
     );
   }
@@ -216,6 +221,7 @@ class _ExtendedSliverAppbarDelegate
     this.onBuild,
     this.statusbarHeight,
     this.toolbarHeight,
+    this.opaqueToolBar,
   }) : super(
           minExtentProtoType: minExtentProtoType,
           maxExtentProtoType: maxExtentProtoType,
@@ -247,6 +253,9 @@ class _ExtendedSliverAppbarDelegate
 
   /// Height of Statusbar. Default value : MediaQuery.of(context).padding.top
   final double statusbarHeight;
+  
+  /// Disable toolbar Transparency changes
+  final bool opaqueToolBar;
   @override
   Widget build(
     BuildContext context,
@@ -271,7 +280,9 @@ class _ExtendedSliverAppbarDelegate
     final Widget toolbar = Container(
       height: toolbarHeight + statusbarHeight,
       padding: EdgeInsets.only(top: statusbarHeight),
-      color: (toolBarColor ?? theme.primaryColor).withOpacity(opacity),
+      color: opaqueToolBar == true
+          ? (toolBarColor ?? theme.primaryColor)
+          : (toolBarColor ?? theme.primaryColor).withOpacity(opacity),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -325,7 +336,8 @@ class _ExtendedSliverAppbarDelegate
             oldDelegate.statusbarHeight != statusbarHeight ||
             oldDelegate.toolBarColor != toolBarColor ||
             oldDelegate.toolbarHeight != toolbarHeight ||
-            oldDelegate.onBuild != onBuild);
+            oldDelegate.onBuild != onBuild ||
+            oldDelegate.opaqueToolBar != opaqueToolBar);
   }
 }
 
