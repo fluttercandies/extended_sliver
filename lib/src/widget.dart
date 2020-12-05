@@ -146,6 +146,10 @@ class ExtendedSliverAppbar extends StatelessWidget {
     this.onBuild,
     this.statusbarHeight,
     this.toolbarHeight,
+    this.isOpacityFadeWithToolbar = true,
+    this.isOpacityFadeWithTitle = true,
+    this.mainAxisAlignment = MainAxisAlignment.spaceBetween,
+    this.crossAxisAlignment = CrossAxisAlignment.center,
   });
 
   /// A widget to display before the [title].
@@ -174,14 +178,36 @@ class ExtendedSliverAppbar extends StatelessWidget {
 
   /// Height of Statusbar. Default value : MediaQuery.of(context).padding.top
   final double statusbarHeight;
+
+  /// Whether do an opacity fade for toolbar.
+  ///
+  /// By default, the value of isOpacityFadeWithToolbar is true.
+  final bool isOpacityFadeWithToolbar;
+
+  /// Whether do an opacity fade for title.
+  ///
+  /// By default, the value of isOpacityFadeWithTitle is true.
+  final bool isOpacityFadeWithTitle;
+
+  /// MainAxisAlignment of toolbar
+  ///
+  /// By default, the value of mainAxisAlignment is MainAxisAlignment.spaceBetween.
+  final MainAxisAlignment mainAxisAlignment;
+
+  /// CrossAxisAlignment of toolbar
+  ///
+  /// By default, the value of crossAxisAlignment is CrossAxisAlignment.center.
+  final CrossAxisAlignment crossAxisAlignment;
+
   @override
   Widget build(BuildContext context) {
     final SafeArea safeArea = context.findAncestorWidgetOfExactType<SafeArea>();
-    double statusbarHeight = this.statusbarHeight ?? 0;
+    double statusbarHeight = this.statusbarHeight;
     final double toolbarHeight = this.toolbarHeight ?? kToolbarHeight;
-    if (safeArea == null || !safeArea.top) {
+    if (statusbarHeight == null && (safeArea == null || !safeArea.top)) {
       statusbarHeight = MediaQuery.of(context).padding.top;
     }
+    statusbarHeight ??= 0;
     final Widget toolbar = SizedBox(
       height: toolbarHeight + statusbarHeight,
     );
@@ -198,6 +224,10 @@ class ExtendedSliverAppbar extends StatelessWidget {
         toolbarHeight: toolbarHeight,
         toolBarColor: toolBarColor,
         onBuild: onBuild,
+        isOpacityFadeWithToolbar: isOpacityFadeWithToolbar,
+        isOpacityFadeWithTitle: isOpacityFadeWithTitle,
+        mainAxisAlignment: mainAxisAlignment,
+        crossAxisAlignment: crossAxisAlignment,
       ),
     );
   }
@@ -216,6 +246,10 @@ class _ExtendedSliverAppbarDelegate
     this.onBuild,
     this.statusbarHeight,
     this.toolbarHeight,
+    this.isOpacityFadeWithToolbar = true,
+    this.isOpacityFadeWithTitle = true,
+    this.mainAxisAlignment = MainAxisAlignment.spaceBetween,
+    this.crossAxisAlignment = CrossAxisAlignment.center,
   }) : super(
           minExtentProtoType: minExtentProtoType,
           maxExtentProtoType: maxExtentProtoType,
@@ -247,6 +281,27 @@ class _ExtendedSliverAppbarDelegate
 
   /// Height of Statusbar. Default value : MediaQuery.of(context).padding.top
   final double statusbarHeight;
+
+  /// Whether do an opacity fade for toolbar.
+  ///
+  /// By default, the value of isOpacityFadeWithToolbar is true.
+  final bool isOpacityFadeWithToolbar;
+
+  /// Whether do an opacity fade for title.
+  ///
+  /// By default, the value of isOpacityFadeWithTitle is true.
+  final bool isOpacityFadeWithTitle;
+
+  /// MainAxisAlignment of toolbar
+  ///
+  /// By default, the value of mainAxisAlignment is MainAxisAlignment.spaceBetween.
+  final MainAxisAlignment mainAxisAlignment;
+
+  /// CrossAxisAlignment of toolbar
+  ///
+  /// By default, the value of crossAxisAlignment is CrossAxisAlignment.center.
+  final CrossAxisAlignment crossAxisAlignment;
+
   @override
   Widget build(
     BuildContext context,
@@ -260,21 +315,29 @@ class _ExtendedSliverAppbarDelegate
         (shrinkOffset / (maxExtent - minExtent)).clamp(0.0, 1.0) as double;
     Widget titleWidget = title;
     if (titleWidget != null) {
-      titleWidget = Opacity(
-        opacity: opacity,
-        child: titleWidget,
-      );
+      if (isOpacityFadeWithTitle) {
+        titleWidget = Opacity(
+          opacity: opacity,
+          child: titleWidget,
+        );
+      }
     } else {
       titleWidget = Container();
     }
     final ThemeData theme = Theme.of(context);
+
+    Color toolBarColor = this.toolBarColor ?? theme.primaryColor;
+    if (isOpacityFadeWithToolbar) {
+      toolBarColor = toolBarColor.withOpacity(opacity);
+    }
+
     final Widget toolbar = Container(
       height: toolbarHeight + statusbarHeight,
       padding: EdgeInsets.only(top: statusbarHeight),
-      color: (toolBarColor ?? theme.primaryColor).withOpacity(opacity),
+      color: toolBarColor,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: mainAxisAlignment,
+        crossAxisAlignment: crossAxisAlignment,
         children: <Widget>[
           leading ??
               const BackButton(
@@ -325,7 +388,11 @@ class _ExtendedSliverAppbarDelegate
             oldDelegate.statusbarHeight != statusbarHeight ||
             oldDelegate.toolBarColor != toolBarColor ||
             oldDelegate.toolbarHeight != toolbarHeight ||
-            oldDelegate.onBuild != onBuild);
+            oldDelegate.onBuild != onBuild ||
+            oldDelegate.isOpacityFadeWithTitle != isOpacityFadeWithTitle ||
+            oldDelegate.isOpacityFadeWithToolbar != isOpacityFadeWithToolbar ||
+            oldDelegate.mainAxisAlignment != mainAxisAlignment ||
+            oldDelegate.crossAxisAlignment != crossAxisAlignment);
   }
 }
 

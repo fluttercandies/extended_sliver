@@ -43,19 +43,19 @@ class Routes {
   ///
   /// [routeName] : 'DemoGroupPage'
   ///
-  /// [arguments] : [keyValue]
+  /// [constructors] :
   ///
-  /// [argumentTypes] : [List<DemoRouteResult>]
+  /// DemoGroupPage : [MapEntry<String, List<DemoRouteResult>> keyValue]
   static const String fluttercandiesDemogrouppage =
       'fluttercandies://demogrouppage';
 
-  /// 'how to use extended_sliver in reality.'
+  /// 'A complex demo with extended_sliver.'
   ///
   /// [name] : 'fluttercandies://homePage'
   ///
   /// [routeName] : 'HomePage'
   ///
-  /// [description] : 'how to use extended_sliver in reality.'
+  /// [description] : 'A complex demo with extended_sliver.'
   ///
   /// [exts] : {group: Complex, order: 0}
   static const String fluttercandiesHomePage = 'fluttercandies://homePage';
@@ -65,6 +65,10 @@ class Routes {
   /// [name] : 'fluttercandies://mainpage'
   ///
   /// [routeName] : 'MainPage'
+  ///
+  /// [constructors] :
+  ///
+  /// MainPage : []
   static const String fluttercandiesMainpage = 'fluttercandies://mainpage';
 
   /// 'extended SliverAppbar.'

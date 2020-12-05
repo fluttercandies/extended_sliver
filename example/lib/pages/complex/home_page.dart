@@ -61,7 +61,7 @@ class _HomePageState extends State<HomePage> {
                   Icons.more_horiz,
                   color: Colors.white,
                 );
-                if (info?.refreshWiget != null) {
+                if (info?.refreshWidget != null) {
                   actions = const SizedBox(
                     height: 20,
                     width: 20,
