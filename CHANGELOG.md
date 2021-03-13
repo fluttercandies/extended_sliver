@@ -1,3 +1,6 @@
+## 2.0.0-non-null-safety
+
+* non-null-safety
 ## 1.1.0
 
 * Correct statusbarHeight
@@ -5,7 +8,7 @@
 * Add isOpacityFadeWithTitle(Whether do an opacity fade for title)
 * Add mainAxisAlignment(MainAxisAlignment of toolbar)
 * Add crossAxisAlignment(CrossAxisAlignment of toolbar)
-  
+
 ## 1.0.1
 
 * Correct shouldRebuild.
