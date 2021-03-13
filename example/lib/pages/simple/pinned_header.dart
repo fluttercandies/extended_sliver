@@ -1,5 +1,5 @@
+import 'package:ff_annotation_route_library/ff_annotation_route_library.dart';
 import 'package:flutter/material.dart';
-import 'package:ff_annotation_route/ff_annotation_route.dart';
 import 'package:extended_sliver/extended_sliver.dart';
 
 @FFRoute(
@@ -27,7 +27,7 @@ class PinnedHeader extends StatelessWidget {
             minExtentProtoType: Container(
               height: 120.0,
               color: Colors.red.withOpacity(0.5),
-              child: FlatButton(
+              child: TextButton(
                 child: const Text('minProtoType'),
                 onPressed: () {
                   print('minProtoType');
@@ -38,7 +38,7 @@ class PinnedHeader extends StatelessWidget {
             maxExtentProtoType: Container(
               height: 200.0,
               color: Colors.blue,
-              child: FlatButton(
+              child: TextButton(
                 child: const Text('maxProtoType'),
                 onPressed: () {
                   print('maxProtoType');
@@ -77,14 +77,14 @@ class PinnedHeader extends StatelessWidget {
 class MySliverPinnedPersistentHeaderDelegate
     extends SliverPinnedPersistentHeaderDelegate {
   MySliverPinnedPersistentHeaderDelegate({
-    @required Widget minExtentProtoType,
-    @required Widget maxExtentProtoType,
+    required Widget minExtentProtoType,
+    required Widget maxExtentProtoType,
   }) : super(
           minExtentProtoType: minExtentProtoType,
           maxExtentProtoType: maxExtentProtoType,
         );
   @override
-  Widget build(BuildContext context, double shrinkOffset, double minExtent,
+  Widget build(BuildContext context, double shrinkOffset, double? minExtent,
       double maxExtent, bool overlapsContent) {
     print(shrinkOffset);
     return Stack(

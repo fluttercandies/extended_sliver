@@ -16,13 +16,13 @@ class SliverPinnedPersistentHeaderElement extends RenderObjectElement {
   RenderSliverPinnedPersistentHeader get renderObject =>
       super.renderObject as RenderSliverPinnedPersistentHeader;
 
-  Element _minExtentPrototype;
+  Element? _minExtentPrototype;
   static final Object _minExtentPrototypeSlot = Object();
-  Element _maxExtentPrototype;
+  Element? _maxExtentPrototype;
   static final Object _maxExtentPrototypeSlot = Object();
 
   @override
-  void mount(Element parent, dynamic newSlot) {
+  void mount(Element? parent, dynamic newSlot) {
     super.mount(parent, newSlot);
     renderObject.element = this;
     _minExtentPrototype = updateChild(_minExtentPrototype,
@@ -59,11 +59,11 @@ class SliverPinnedPersistentHeaderElement extends RenderObjectElement {
     renderObject.triggerRebuild();
   }
 
-  Element child;
+  Element? child;
 
-  void build(double shrinkOffset, double minExtent, double maxExtent,
+  void build(double shrinkOffset, double? minExtent, double maxExtent,
       bool overlapsContent) {
-    owner.buildScope(this, () {
+    owner!.buildScope(this, () {
       child = updateChild(
         child,
         widget.delegate
@@ -82,26 +82,28 @@ class SliverPinnedPersistentHeaderElement extends RenderObjectElement {
   }
 
   @override
-  void insertChildRenderObject(covariant RenderBox child, dynamic slot) {
+  void insertRenderObjectChild(
+      covariant RenderObject child, covariant dynamic slot) {
     assert(renderObject.debugValidateChild(child));
 
     assert(child is RenderBox);
     if (slot == _minExtentPrototypeSlot) {
-      renderObject.minProtoType = child;
+      renderObject.minProtoType = child as RenderBox;
     } else if (slot == _maxExtentPrototypeSlot) {
-      renderObject.maxProtoType = child;
+      renderObject.maxProtoType = child as RenderBox;
     } else {
-      renderObject.child = child;
+      renderObject.child = child as RenderBox;
     }
   }
 
   @override
-  void moveChildRenderObject(covariant RenderObject child, dynamic slot) {
+  void moveRenderObjectChild(
+      covariant RenderObject child, dynamic oldSlot, dynamic newSlot) {
     assert(false);
   }
 
   @override
-  void removeChildRenderObject(covariant RenderObject child) {
+  void removeRenderObjectChild(covariant RenderObject child, dynamic slot) {
     if (child == renderObject.minProtoType) {
       renderObject.minProtoType = null;
     } else if (child == renderObject.maxProtoType) {
@@ -114,13 +116,13 @@ class SliverPinnedPersistentHeaderElement extends RenderObjectElement {
   @override
   void visitChildren(ElementVisitor visitor) {
     if (child != null) {
-      visitor(child);
+      visitor(child!);
     }
     if (_minExtentPrototype != null) {
-      visitor(_minExtentPrototype);
+      visitor(_minExtentPrototype!);
     }
     if (_maxExtentPrototype != null) {
-      visitor(_maxExtentPrototype);
+      visitor(_maxExtentPrototype!);
     }
   }
 }

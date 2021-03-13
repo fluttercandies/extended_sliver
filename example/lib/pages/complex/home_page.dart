@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:extended_sliver/extended_sliver.dart';
+import 'package:ff_annotation_route_library/ff_annotation_route_library.dart';
 import 'package:flutter/material.dart';
-import 'package:ff_annotation_route/ff_annotation_route.dart';
 import 'package:pull_to_refresh_notification/pull_to_refresh_notification.dart';
 
 @FFRoute(
@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage> {
             physics: const AlwaysScrollableClampingScrollPhysics(),
             slivers: <Widget>[
               PullToRefreshContainer(
-                  (PullToRefreshScrollNotificationInfo info) {
+                  (PullToRefreshScrollNotificationInfo? info) {
                 final double offset = info?.dragOffset ?? 0.0;
                 Widget actions = const Icon(
                   Icons.more_horiz,
@@ -80,13 +80,23 @@ class _HomePageState extends State<HomePage> {
                       builder:
                           (BuildContext context, AsyncSnapshot<bool> data) {
                         //hide FollowButton
-                        if (!data.data) {
+                        if (!data.data!) {
                           return Container();
                         }
-                        return OutlineButton(
+                        return OutlinedButton(
                           child: const Text('Follow'),
-                          textColor: Colors.white,
-                          borderSide: const BorderSide(color: Colors.orange),
+                          style: ButtonStyle(
+                            textStyle: MaterialStateProperty.all(
+                              const TextStyle(color: Colors.white),
+                            ),
+                            foregroundColor:
+                                MaterialStateProperty.all(Colors.white),
+                            side: MaterialStateProperty.all(
+                              const BorderSide(
+                                color: Colors.orange,
+                              ),
+                            ),
+                          ),
                           onPressed: () {},
                         );
                       },
@@ -102,7 +112,7 @@ class _HomePageState extends State<HomePage> {
                   onBuild: (
                     BuildContext context,
                     double shrinkOffset,
-                    double minExtent,
+                    double? minExtent,
                     double maxExtent,
                     bool overlapsContent,
                   ) {
@@ -214,7 +224,7 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.refresh),
         onPressed: () {
-          refreshKey.currentState.show(
+          refreshKey.currentState!.show(
             notificationDragOffset: maxDragOffset,
           );
         },
@@ -266,11 +276,19 @@ class _FollowButtonState extends State<FollowButton> {
     return ButtonTheme(
       //MaterialTapTargetSize.padded min 48
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      child: OutlineButton(
+      child: OutlinedButton(
         child: const Text('Follow'),
-        textColor: Colors.white,
-        padding: const EdgeInsets.all(0),
-        borderSide: const BorderSide(color: Colors.orange),
+        style: ButtonStyle(
+          textStyle: MaterialStateProperty.all(
+            const TextStyle(color: Colors.white),
+          ),
+          foregroundColor: MaterialStateProperty.all(Colors.white),
+          side: MaterialStateProperty.all(
+            const BorderSide(
+              color: Colors.orange,
+            ),
+          ),
+        ),
         onPressed: () {},
       ),
     );

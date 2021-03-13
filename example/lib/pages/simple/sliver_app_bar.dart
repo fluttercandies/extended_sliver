@@ -1,5 +1,5 @@
+import 'package:ff_annotation_route_library/ff_annotation_route_library.dart';
 import 'package:flutter/material.dart';
-import 'package:ff_annotation_route/ff_annotation_route.dart';
 import 'package:extended_sliver/extended_sliver.dart';
 
 @FFRoute(

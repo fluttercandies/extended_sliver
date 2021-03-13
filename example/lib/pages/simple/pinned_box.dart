@@ -1,5 +1,5 @@
+import 'package:ff_annotation_route_library/ff_annotation_route_library.dart';
 import 'package:flutter/material.dart';
-import 'package:ff_annotation_route/ff_annotation_route.dart';
 import 'package:extended_sliver/extended_sliver.dart';
 
 @FFRoute(
@@ -32,7 +32,7 @@ class PinnedBox extends StatelessWidget {
                     '[love]Extended text help you to build rich text quickly. any special text you will have with extended text. '
                     '\n\nIt\'s my pleasure to invite you to join \$FlutterCandies\$ if you want to improve flutter .[love]'
                     '\n\nif you meet any problem, please let me konw @zmtzawqlp .[sun_glasses]'),
-                FlatButton(
+                TextButton(
                   child: const Text('I\'m button. click me!'),
                   onPressed: () {
                     debugPrint('click');

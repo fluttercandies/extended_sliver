@@ -7,10 +7,9 @@ import 'render.dart';
 /// Delegate for configuring a [SliverPinnedPersistentHeader].
 abstract class SliverPinnedPersistentHeaderDelegate {
   SliverPinnedPersistentHeaderDelegate({
-    @required this.minExtentProtoType,
-    @required this.maxExtentProtoType,
-  })  : assert(minExtentProtoType != null),
-        assert(maxExtentProtoType != null);
+    required this.minExtentProtoType,
+    required this.maxExtentProtoType,
+  });
 
   /// The poroto type widget of min extent
   final Widget minExtentProtoType;
@@ -59,7 +58,7 @@ abstract class SliverPinnedPersistentHeaderDelegate {
   /// be based entirely on the constructor arguments passed to the delegate. See
   /// [shouldRebuild], which must return true if a new delegate would return a
   /// different value.
-  Widget build(BuildContext context, double shrinkOffset, double minExtent,
+  Widget build(BuildContext context, double shrinkOffset, double? minExtent,
       double maxExtent, bool overlapsContent);
 
   /// Whether this delegate is meaningfully different from the old delegate.
@@ -85,8 +84,7 @@ class SliverPinnedPersistentHeader extends StatelessWidget {
   /// a viewport.
   ///
   /// The [delegate] must not be null.
-  const SliverPinnedPersistentHeader({@required this.delegate})
-      : assert(delegate != null);
+  const SliverPinnedPersistentHeader({required this.delegate});
   final SliverPinnedPersistentHeaderDelegate delegate;
   @override
   Widget build(BuildContext context) {
@@ -125,8 +123,8 @@ class SliverPinnedPersistentHeaderRenderObjectWidget
 class SliverPinnedToBoxAdapter extends SingleChildRenderObjectWidget {
   /// Creates a pinned sliver that contains a single box widget.
   const SliverPinnedToBoxAdapter({
-    Key key,
-    Widget child,
+    Key? key,
+    Widget? child,
   }) : super(key: key, child: child);
 
   @override
@@ -153,31 +151,31 @@ class ExtendedSliverAppbar extends StatelessWidget {
   });
 
   /// A widget to display before the [title].
-  final Widget leading;
+  final Widget? leading;
 
   /// The primary widget displayed in the app bar.
   ///
   /// Typically a [Text] widget containing a description of the current contents
   /// of the app.
-  final Widget title;
+  final Widget? title;
 
   /// Widgets to display after the [title] widget.
-  final Widget actions;
+  final Widget? actions;
 
   /// A Widget to display behind [leading],[title],[actions].
-  final Widget background;
+  final Widget? background;
 
   /// Background color for Row(leading,title,background).
-  final Color toolBarColor;
+  final Color? toolBarColor;
 
   /// Call when re-build on scroll.
-  final OnSliverPinnedPersistentHeaderDelegateBuild onBuild;
+  final OnSliverPinnedPersistentHeaderDelegateBuild? onBuild;
 
   /// Height of Toolbar. Default value : kToolbarHeight
-  final double toolbarHeight;
+  final double? toolbarHeight;
 
   /// Height of Statusbar. Default value : MediaQuery.of(context).padding.top
-  final double statusbarHeight;
+  final double? statusbarHeight;
 
   /// Whether do an opacity fade for toolbar.
   ///
@@ -201,8 +199,9 @@ class ExtendedSliverAppbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final SafeArea safeArea = context.findAncestorWidgetOfExactType<SafeArea>();
-    double statusbarHeight = this.statusbarHeight;
+    final SafeArea? safeArea =
+        context.findAncestorWidgetOfExactType<SafeArea>();
+    double? statusbarHeight = this.statusbarHeight;
     final double toolbarHeight = this.toolbarHeight ?? kToolbarHeight;
     if (statusbarHeight == null && (safeArea == null || !safeArea.top)) {
       statusbarHeight = MediaQuery.of(context).padding.top;
@@ -236,8 +235,8 @@ class ExtendedSliverAppbar extends StatelessWidget {
 class _ExtendedSliverAppbarDelegate
     extends SliverPinnedPersistentHeaderDelegate {
   _ExtendedSliverAppbarDelegate({
-    @required Widget minExtentProtoType,
-    @required Widget maxExtentProtoType,
+    required Widget minExtentProtoType,
+    required Widget maxExtentProtoType,
     this.leading,
     this.title,
     this.actions,
@@ -256,31 +255,31 @@ class _ExtendedSliverAppbarDelegate
         );
 
   /// A widget to display before the [title].
-  final Widget leading;
+  final Widget? leading;
 
   /// The primary widget displayed in the app bar.
   ///
   /// Typically a [Text] widget containing a description of the current contents
   /// of the app.
-  final Widget title;
+  final Widget? title;
 
   /// Widgets to display after the [title] widget.
-  final Widget actions;
+  final Widget? actions;
 
   /// A Widget to display behind [leading],[title],[actions].
-  final Widget background;
+  final Widget? background;
 
   /// Background color for Row(leading,title,background).
-  final Color toolBarColor;
+  final Color? toolBarColor;
 
   /// Call when re-build on scroll.
-  final OnSliverPinnedPersistentHeaderDelegateBuild onBuild;
+  final OnSliverPinnedPersistentHeaderDelegateBuild? onBuild;
 
   /// Height of Toolbar. Default value : kToolbarHeight
-  final double toolbarHeight;
+  final double? toolbarHeight;
 
   /// Height of Statusbar. Default value : MediaQuery.of(context).padding.top
-  final double statusbarHeight;
+  final double? statusbarHeight;
 
   /// Whether do an opacity fade for toolbar.
   ///
@@ -306,14 +305,14 @@ class _ExtendedSliverAppbarDelegate
   Widget build(
     BuildContext context,
     double shrinkOffset,
-    double minExtent,
+    double? minExtent,
     double maxExtent,
     bool overlapsContent,
   ) {
     onBuild?.call(context, shrinkOffset, minExtent, maxExtent, overlapsContent);
     final double opacity =
-        (shrinkOffset / (maxExtent - minExtent)).clamp(0.0, 1.0) as double;
-    Widget titleWidget = title;
+        (shrinkOffset / (maxExtent - minExtent!)).clamp(0.0, 1.0);
+    Widget? titleWidget = title;
     if (titleWidget != null) {
       if (isOpacityFadeWithTitle) {
         titleWidget = Opacity(
@@ -332,8 +331,8 @@ class _ExtendedSliverAppbarDelegate
     }
 
     final Widget toolbar = Container(
-      height: toolbarHeight + statusbarHeight,
-      padding: EdgeInsets.only(top: statusbarHeight),
+      height: toolbarHeight! + statusbarHeight!,
+      padding: EdgeInsets.only(top: statusbarHeight!),
       color: toolBarColor,
       child: Row(
         mainAxisAlignment: mainAxisAlignment,
@@ -400,7 +399,7 @@ class _ExtendedSliverAppbarDelegate
 typedef OnSliverPinnedPersistentHeaderDelegateBuild = void Function(
   BuildContext context,
   double shrinkOffset,
-  double minExtent,
+  double? minExtent,
   double maxExtent,
   bool overlapsContent,
 );
