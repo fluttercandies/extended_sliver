@@ -1,3 +1,7 @@
+## 2.0.1
+
+* Fix exception when unmount renderObject
+
 ## 2.0.0
 
 * Support null-safety

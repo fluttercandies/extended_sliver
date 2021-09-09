@@ -33,8 +33,8 @@ class SliverPinnedPersistentHeaderElement extends RenderObjectElement {
 
   @override
   void unmount() {
-    super.unmount();
     renderObject.element = null;
+    super.unmount();
   }
 
   @override
