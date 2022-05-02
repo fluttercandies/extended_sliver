@@ -9,9 +9,10 @@ environment:
 
 dependencies:
   cupertino_icons: any
+  webview_flutter: any
   extended_sliver:
     path: ../
-  ff_annotation_route_library: 3.0.0
+  ff_annotation_route_library: any
   flutter:
     sdk: flutter
 

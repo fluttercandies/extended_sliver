@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import 'render.dart';
+import 'rendering.dart';
 import 'widget.dart';
 
 class SliverPinnedPersistentHeaderElement extends RenderObjectElement {

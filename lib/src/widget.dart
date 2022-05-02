@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'element.dart';
-import 'render.dart';
+import 'rendering.dart';
 
 /// Delegate for configuring a [SliverPinnedPersistentHeader].
 abstract class SliverPinnedPersistentHeaderDelegate {
@@ -129,6 +129,39 @@ class SliverPinnedToBoxAdapter extends SingleChildRenderObjectWidget {
   @override
   RenderSliverPinnedToBoxAdapter createRenderObject(BuildContext context) =>
       RenderSliverPinnedToBoxAdapter();
+}
+
+/// Sliver BoxAdapter for nested Webview or Pdfview
+///
+class SliverToScrollableBoxAdapter extends SingleChildRenderObjectWidget {
+  /// Creates a sliver that contains a single scrollable box widget.
+  const SliverToScrollableBoxAdapter({
+    Key? key,
+    Widget? child,
+    required this.childExtent,
+    required this.onScrollOffsetChanged,
+  }) : super(key: key, child: child);
+
+  final double childExtent;
+  final void Function({
+    required double scrollOffset,
+    required double childLayoutExtent,
+    required double targetEndScrollOffsetForPaint,
+  }) onScrollOffsetChanged;
+
+  @override
+  RenderSliverToScrollableBoxAdapter createRenderObject(BuildContext context) =>
+      RenderSliverToScrollableBoxAdapter(
+        childExtent: childExtent,
+        onScrollOffsetChanged: onScrollOffsetChanged,
+      );
+
+  @override
+  void updateRenderObject(BuildContext context,
+      covariant RenderSliverToScrollableBoxAdapter renderObject) {
+    renderObject.childExtent = childExtent;
+    renderObject.onScrollOffsetChanged = onScrollOffsetChanged;
+  }
 }
 
 /// A material design app bar that integrates with a [CustomScrollView].
