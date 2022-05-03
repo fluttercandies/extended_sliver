@@ -1,9 +1,8 @@
-import 'dart:convert';
+import 'dart:io';
+import 'dart:ui';
 
 import 'package:extended_sliver/extended_sliver.dart';
 import 'package:ff_annotation_route_library/ff_annotation_route_library.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -20,17 +19,41 @@ class NestedWebviewDemo extends StatelessWidget {
   NestedWebviewDemo({Key? key}) : super(key: key);
 
   final NestedWebviewController nestedWebviewController =
-      NestedWebviewController('https://flutter.cn');
+      NestedWebviewController('https://flutter.dev'
+          //'https://flutter.cn'
+          );
+  final ScrollController scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
     // return WebView(
     //   initialUrl: nestedWebviewController.initialUrl,
     // );
-    return ValueListenableBuilder<WebViewStatus>(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('NestedWebview'),
+        actions: <Widget>[
+          TextButton(
+              onPressed: () {
+                scrollController.animateTo(
+                  nestedWebviewController.scrollHeightNotifier.value,
+                  duration: const Duration(seconds: 1),
+                  curve: Curves.linear,
+                );
+              },
+              child: const Text(
+                'animate to Webview bottom',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ))
+        ],
+      ),
+      body: ValueListenableBuilder<WebViewStatus>(
         valueListenable: nestedWebviewController.webViewStatusNotifier,
         builder:
             (BuildContext context, WebViewStatus webViewStatus, Widget? child) {
           return CustomScrollView(
+            controller: scrollController,
             slivers: <Widget>[
               if (webViewStatus == WebViewStatus.completed)
                 SliverToBoxAdapter(
@@ -58,15 +81,16 @@ class NestedWebviewDemo extends StatelessWidget {
                   //     child: child,
                   //   ),
                   // );
-                  return SliverToScrollableBoxAdapter(
+                  return SliverToNestedScrollBoxAdapter(
                     childExtent: scrollHeight,
-                    onScrollOffsetChanged: ({
-                      required double scrollOffset,
-                      required double childLayoutExtent,
-                      required double targetEndScrollOffsetForPaint,
-                    }) {
+                    onScrollOffsetChanged: (double scrollOffset) {
+                      double y = scrollOffset;
+                      if (Platform.isAndroid) {
+                        // https://github.com/flutter/flutter/issues/75841
+                        y *= window.devicePixelRatio;
+                      }
                       nestedWebviewController.webviewController
-                          ?.scrollTo(0, scrollOffset.toInt());
+                          ?.scrollTo(0, y.ceil());
                     },
                     child: child,
                   );
@@ -84,8 +108,6 @@ class NestedWebviewDemo extends StatelessWidget {
                         .scrollHeightNotifierJavascriptChannel
                   },
                   javascriptMode: JavascriptMode.unrestricted,
-                  gestureRecognizers: const <
-                      Factory<OneSequenceGestureRecognizer>>{},
                 ),
               ),
               if (webViewStatus != WebViewStatus.completed)
@@ -152,7 +174,9 @@ class NestedWebviewDemo extends StatelessWidget {
                 ),
             ],
           );
-        });
+        },
+      ),
+    );
   }
 }
 
@@ -205,9 +229,8 @@ class NestedWebviewController {
           final double? height = double.tryParse(msg);
           if (height != null) {
             scrollHeightNotifier.value = height;
-            if (height > 100) {
-              webViewStatusNotifier.value = WebViewStatus.completed;
-            }
+
+            webViewStatusNotifier.value = WebViewStatus.completed;
           }
         },
       );
@@ -245,44 +268,3 @@ const String scrollHeightJs = '''(function() {
     timer && clearTimeout(timer);
   };
 })();''';
-
-final String testHtml = Uri.dataFromString(
-  '''<!DOCTYPE html>
-<html>
-<head>
-  <style>
-  table, th, td {
-    border: 1px solid black;
-    border-collapse: collapse;
-  }
-  th, td, p {
-    padding: 5px;
-    text-align: left;
-  }
-  </style>
-</head>
-  <body>
-    <h2>PDF Generated with flutter_html_to_pdf plugin</h2>
-    <table style="width:100%">
-      <caption>Sample HTML Table</caption>
-      <tr>
-        <th>Month</th>
-        <th>Savings</th>
-      </tr>
-      <tr>
-        <td>January</td>
-        <td>100</td>
-      </tr>
-      <tr>
-        <td>February</td>
-        <td>50</td>
-      </tr>
-    </table>
-    <p>Image loaded from web</p>
-
-  </body>
-</html>
-''',
-  mimeType: 'text/html',
-  encoding: Encoding.getByName('utf-8'),
-).toString();

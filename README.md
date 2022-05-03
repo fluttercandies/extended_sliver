@@ -6,7 +6,7 @@ Language: English | [中文简体](README-ZH.md)
 
 ## Description
 
-A powerful extension library of Sliver, which include SliverPinnedPersistentHeader, SliverPinnedToBoxAdapter and ExtendedSliverAppbar.
+A powerful extension library of Sliver, which include SliverToNestedScrollBoxAdapter, SliverPinnedPersistentHeader, SliverPinnedToBoxAdapter and ExtendedSliverAppbar.
 
 - [extended_sliver](#extended_sliver)
   - [Description](#description)
@@ -15,6 +15,7 @@ A powerful extension library of Sliver, which include SliverPinnedPersistentHead
   - [SliverPinnedPersistentHeader](#sliverpinnedpersistentheader)
   - [SliverPinnedToBoxAdapter](#sliverpinnedtoboxadapter)
   - [ExtendedSliverAppbar](#extendedsliverappbar)
+  - [SliverToNestedScrollBoxAdapter](#slivertonestedscrollboxadapter)
   - [Complex Demo](#complex-demo)
 
 
@@ -122,6 +123,77 @@ return CustomScrollView(
           color: Colors.white,
         ),
       ),
+    ),
+  ],
+);
+```
+
+## SliverToNestedScrollBoxAdapter
+
+You can create nested scrollable widget(like Webview) in CustomScrollView/NestedScrollView.
+
+```dart
+return CustomScrollView(
+  slivers: <Widget>[
+      SliverToBoxAdapter(
+        child: Container(
+          height: 100,
+          color: Colors.red,
+          child: const Center(
+            child: Text(
+              'Header',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+      ),
+    ValueListenableBuilder<double>(
+      valueListenable: nestedWebviewController.scrollHeightNotifier,
+      builder: (
+        BuildContext context,
+        double scrollHeight,
+        Widget? child,
+      ) {
+        return SliverToNestedScrollBoxAdapter(
+          childExtent: scrollHeight,
+          onScrollOffsetChanged: (double scrollOffset) {
+            double y = scrollOffset;
+            if (Platform.isAndroid) {
+              // https://github.com/flutter/flutter/issues/75841
+              y *= window.devicePixelRatio;
+      
+            nestedWebviewController.webviewController
+                ?.scrollTo(0, y.ceil());
+          },
+          child: child,
+        );
+      },
+      child: WebView(
+        initialUrl: nestedWebviewController.initialUrl,
+        onPageStarted: nestedWebviewController.onPageStarted,
+        onPageFinished: nestedWebviewController.onPageFinished,
+        onWebResourceError:
+            nestedWebviewController.onWebResourceError,
+        onWebViewCreated: nestedWebviewController.onWebViewCreated,
+        onProgress: nestedWebviewController.onProgress,
+        javascriptChannels: <JavascriptChannel>{
+          nestedWebviewController
+              .scrollHeightNotifierJavascriptChannel
+        },
+        javascriptMode: JavascriptMode.unrestricted,
+      ),
+    ),
+    SliverToBoxAdapter(
+        child: Container(
+          height: 300,
+          color: Colors.green,
+          child: const Center(
+            child: Text(
+              'Footer',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
     ),
   ],
 );

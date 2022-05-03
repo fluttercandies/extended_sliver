@@ -3,9 +3,10 @@
 import 'dart:math' as math;
 import 'dart:math';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'element.dart';
+
+typedef ScrollOffsetChanged = void Function(double offset);
 
 class RenderSliverPinnedPersistentHeader extends RenderSliver
     with RenderObjectWithChildMixin<RenderBox>, RenderSliverHelpers {
@@ -379,12 +380,13 @@ double getChildExtend(RenderBox? child, SliverConstraints constraints) {
   }
 }
 
-/// Sliver BoxAdapter for nested Webview or Pdfview
+/// Sliver BoxAdapter for nested scrollable (like webview)
 ///
-/// form RenderSliverToBoxAdapter and RenderSliverFixedExtentBoxAdaptor
-class RenderSliverToScrollableBoxAdapter extends RenderSliverSingleBoxAdapter {
+/// come form RenderSliverToBoxAdapter and RenderSliverFixedExtentBoxAdaptor
+class RenderSliverToNestedScrollBoxAdapter
+    extends RenderSliverSingleBoxAdapter {
   /// Creates a [RenderSliver] that wraps a [RenderBox].
-  RenderSliverToScrollableBoxAdapter({
+  RenderSliverToNestedScrollBoxAdapter({
     RenderBox? child,
     required double childExtent,
     required this.onScrollOffsetChanged,
@@ -402,11 +404,7 @@ class RenderSliverToScrollableBoxAdapter extends RenderSliverSingleBoxAdapter {
     markNeedsLayout();
   }
 
-  void Function({
-    required double scrollOffset,
-    required double childLayoutExtent,
-    required double targetEndScrollOffsetForPaint,
-  }) onScrollOffsetChanged;
+  ScrollOffsetChanged onScrollOffsetChanged;
 
   @override
   void performLayout() {
@@ -433,8 +431,8 @@ class RenderSliverToScrollableBoxAdapter extends RenderSliverSingleBoxAdapter {
       child!.layout(childConstraints, parentUsesSize: true);
     }
 
-    final double targetEndScrollOffsetForPaint =
-        constraints.scrollOffset + constraints.remainingPaintExtent;
+    // final double targetEndScrollOffsetForPaint =
+    //     constraints.scrollOffset + constraints.remainingPaintExtent;
 
     const double leadingScrollOffset = 0;
     final double trailingScrollOffset = childExtent;
@@ -461,19 +459,16 @@ class RenderSliverToScrollableBoxAdapter extends RenderSliverSingleBoxAdapter {
     );
 
     setChildParentData(child!, constraints, geometry!);
+  }
 
-    if (targetEndScrollOffsetForPaint < childExtent) {
-      SchedulerBinding.instance?.addPostFrameCallback(
-        (Duration timeStamp) {
-          onScrollOffsetChanged(
-            scrollOffset: constraints.scrollOffset,
-            childLayoutExtent: childLayoutExtent,
-            targetEndScrollOffsetForPaint:
-                constraints.scrollOffset + constraints.remainingPaintExtent,
-          );
-        },
-      );
+  @override
+  void paint(PaintingContext context, Offset offset) {
+    // maybe overscroll in ios
+    if (constraints.scrollOffset + constraints.remainingPaintExtent <=
+        childExtent) {
+      onScrollOffsetChanged(constraints.scrollOffset);
     }
+    super.paint(context, offset);
   }
 
   @override
@@ -501,6 +496,7 @@ class RenderSliverToScrollableBoxAdapter extends RenderSliverSingleBoxAdapter {
         break;
       case AxisDirection.down:
         //childParentData.paintOffset = Offset(0.0, -constraints.scrollOffset);
+        // zmt
         childParentData.paintOffset =
             Offset(0.0, min(childExtent - targetEndScrollOffsetForPaint, 0));
         break;
@@ -551,6 +547,7 @@ class RenderSliverToScrollableBoxAdapter extends RenderSliverSingleBoxAdapter {
     return result.addWithOutOfBandPosition(
       paintOffset: paintOffset,
       hitTest: (BoxHitTestResult result) {
+        // zmt
         return child.hitTest(result,
             position: Offset(transformedPosition.dx,
                 transformedPosition.dy - constraints.scrollOffset));

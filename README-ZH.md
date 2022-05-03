@@ -6,7 +6,7 @@
 
 ## 描述
 
-强大的Sliver扩展库, 包括 SliverPinnedPersistentHeader, SliverPinnedToBoxAdapter 和 ExtendedSliverAppbar.
+强大的Sliver扩展库, 包括 SliverToNestedScrollBoxAdapter, SliverPinnedPersistentHeader, SliverPinnedToBoxAdapter 和 ExtendedSliverAppbar.
 
 - [extended_sliver](#extended_sliver)
   - [描述](#描述)
@@ -15,6 +15,7 @@
   - [SliverPinnedPersistentHeader](#sliverpinnedpersistentheader)
   - [SliverPinnedToBoxAdapter](#sliverpinnedtoboxadapter)
   - [ExtendedSliverAppbar](#extendedsliverappbar)
+  - [SliverToNestedScrollBoxAdapter](#slivertonestedscrollboxadapter)
   - [复杂的例子](#复杂的例子)
 
 
@@ -122,6 +123,77 @@ return CustomScrollView(
           color: Colors.white,
         ),
       ),
+    ),
+  ],
+);
+```
+
+## SliverToNestedScrollBoxAdapter
+
+你可以在 CustomScrollView/NestedScrollView 中创建一个嵌套滚动的组件(比如 Webview).
+
+```dart
+return CustomScrollView(
+  slivers: <Widget>[
+      SliverToBoxAdapter(
+        child: Container(
+          height: 100,
+          color: Colors.red,
+          child: const Center(
+            child: Text(
+              'Header',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+      ),
+    ValueListenableBuilder<double>(
+      valueListenable: nestedWebviewController.scrollHeightNotifier,
+      builder: (
+        BuildContext context,
+        double scrollHeight,
+        Widget? child,
+      ) {
+        return SliverToNestedScrollBoxAdapter(
+          childExtent: scrollHeight,
+          onScrollOffsetChanged: (double scrollOffset) {
+            double y = scrollOffset;
+            if (Platform.isAndroid) {
+              // https://github.com/flutter/flutter/issues/75841
+              y *= window.devicePixelRatio;
+      
+            nestedWebviewController.webviewController
+                ?.scrollTo(0, y.ceil());
+          },
+          child: child,
+        );
+      },
+      child: WebView(
+        initialUrl: nestedWebviewController.initialUrl,
+        onPageStarted: nestedWebviewController.onPageStarted,
+        onPageFinished: nestedWebviewController.onPageFinished,
+        onWebResourceError:
+            nestedWebviewController.onWebResourceError,
+        onWebViewCreated: nestedWebviewController.onWebViewCreated,
+        onProgress: nestedWebviewController.onProgress,
+        javascriptChannels: <JavascriptChannel>{
+          nestedWebviewController
+              .scrollHeightNotifierJavascriptChannel
+        },
+        javascriptMode: JavascriptMode.unrestricted,
+      ),
+    ),
+    SliverToBoxAdapter(
+        child: Container(
+          height: 300,
+          color: Colors.green,
+          child: const Center(
+            child: Text(
+              'Footer',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
     ),
   ],
 );

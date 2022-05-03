@@ -24,7 +24,8 @@ class MyApp extends StatelessWidget {
             if (settings.name == Routes.fluttercandiesMainpage ||
                 settings.name == Routes.fluttercandiesDemogrouppage ||
                 settings.name == Routes.fluttercandiesHomePage ||
-                settings.name == Routes.fluttercandiesSliverAppbar) {
+                settings.name == Routes.fluttercandiesSliverAppbar ||
+                settings.name == Routes.fluttercandiesNestedWebviewDemo) {
               return settings;
             }
             return settings.copyWith(

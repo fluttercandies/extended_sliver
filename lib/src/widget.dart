@@ -131,11 +131,11 @@ class SliverPinnedToBoxAdapter extends SingleChildRenderObjectWidget {
       RenderSliverPinnedToBoxAdapter();
 }
 
-/// Sliver BoxAdapter for nested Webview or Pdfview
+/// Sliver BoxAdapter for nested scrollable (like webview)
 ///
-class SliverToScrollableBoxAdapter extends SingleChildRenderObjectWidget {
-  /// Creates a sliver that contains a single scrollable box widget.
-  const SliverToScrollableBoxAdapter({
+class SliverToNestedScrollBoxAdapter extends SingleChildRenderObjectWidget {
+  /// Creates a sliver that contains a single nested scrollable box widget.
+  const SliverToNestedScrollBoxAdapter({
     Key? key,
     Widget? child,
     required this.childExtent,
@@ -143,22 +143,19 @@ class SliverToScrollableBoxAdapter extends SingleChildRenderObjectWidget {
   }) : super(key: key, child: child);
 
   final double childExtent;
-  final void Function({
-    required double scrollOffset,
-    required double childLayoutExtent,
-    required double targetEndScrollOffsetForPaint,
-  }) onScrollOffsetChanged;
+  final ScrollOffsetChanged onScrollOffsetChanged;
 
   @override
-  RenderSliverToScrollableBoxAdapter createRenderObject(BuildContext context) =>
-      RenderSliverToScrollableBoxAdapter(
+  RenderSliverToNestedScrollBoxAdapter createRenderObject(
+          BuildContext context) =>
+      RenderSliverToNestedScrollBoxAdapter(
         childExtent: childExtent,
         onScrollOffsetChanged: onScrollOffsetChanged,
       );
 
   @override
   void updateRenderObject(BuildContext context,
-      covariant RenderSliverToScrollableBoxAdapter renderObject) {
+      covariant RenderSliverToNestedScrollBoxAdapter renderObject) {
     renderObject.childExtent = childExtent;
     renderObject.onScrollOffsetChanged = onScrollOffsetChanged;
   }
@@ -427,7 +424,7 @@ class _ExtendedSliverAppbarDelegate
   }
 }
 
-///Call when re-build on scroll
+/// Call when re-build on scroll
 typedef OnSliverPinnedPersistentHeaderDelegateBuild = void Function(
   BuildContext context,
   double shrinkOffset,

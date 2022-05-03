@@ -1,3 +1,7 @@
+## 2.1.0
+
+* Add SliverToNestedScrollBoxAdapter/RenderSliverToNestedScrollBoxAdapter to support to nested scroll(like Webview in CustomScrollView/NestedScrollView)
+
 ## 2.0.1
 
 * Fix exception when unmount renderObject
