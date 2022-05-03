@@ -464,8 +464,9 @@ class RenderSliverToNestedScrollBoxAdapter
   @override
   void paint(PaintingContext context, Offset offset) {
     // maybe overscroll in ios
-    if (constraints.scrollOffset + constraints.remainingPaintExtent <=
-        childExtent) {
+    final double targetEndScrollOffsetForPaint =
+        constraints.scrollOffset + constraints.remainingPaintExtent;
+    if (targetEndScrollOffsetForPaint <= childExtent) {
       onScrollOffsetChanged(constraints.scrollOffset);
     }
     super.paint(context, offset);
@@ -496,7 +497,7 @@ class RenderSliverToNestedScrollBoxAdapter
         break;
       case AxisDirection.down:
         //childParentData.paintOffset = Offset(0.0, -constraints.scrollOffset);
-        // zmt
+        // zmtzawqlp
         childParentData.paintOffset =
             Offset(0.0, min(childExtent - targetEndScrollOffsetForPaint, 0));
         break;
@@ -547,7 +548,7 @@ class RenderSliverToNestedScrollBoxAdapter
     return result.addWithOutOfBandPosition(
       paintOffset: paintOffset,
       hitTest: (BoxHitTestResult result) {
-        // zmt
+        // zmtzawqlp
         return child.hitTest(result,
             position: Offset(transformedPosition.dx,
                 transformedPosition.dy - constraints.scrollOffset));
