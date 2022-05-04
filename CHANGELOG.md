@@ -1,3 +1,7 @@
+## 2.1.2
+
+* Correct paintOffset when childExtent <= viewportMainAxisExtent (RenderSliverToNestedScrollBoxAdapter)
+
 ## 2.1.1
 
 * Correct assert in RenderSliverToNestedScrollBoxAdapter.setChildParentData

@@ -52,126 +52,134 @@ class NestedWebviewDemo extends StatelessWidget {
         valueListenable: nestedWebviewController.webViewStatusNotifier,
         builder:
             (BuildContext context, WebViewStatus webViewStatus, Widget? child) {
-          return CustomScrollView(
-            controller: scrollController,
-            slivers: <Widget>[
-              if (webViewStatus == WebViewStatus.completed)
-                SliverToBoxAdapter(
-                  child: Container(
-                    height: 100,
-                    color: Colors.red,
-                    child: const Center(
-                      child: Text(
-                        'Header',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ),
-              ValueListenableBuilder<double>(
-                valueListenable: nestedWebviewController.scrollHeightNotifier,
-                builder: (
-                  BuildContext context,
-                  double scrollHeight,
-                  Widget? child,
-                ) {
-                  // return SliverToBoxAdapter(
-                  //   child: SizedBox(
-                  //     height: scrollHeight,
-                  //     child: child,
-                  //   ),
-                  // );
-                  return SliverToNestedScrollBoxAdapter(
-                    childExtent: scrollHeight,
-                    onScrollOffsetChanged: (double scrollOffset) {
-                      double y = scrollOffset;
-                      if (Platform.isAndroid) {
-                        // https://github.com/flutter/flutter/issues/75841
-                        y *= window.devicePixelRatio;
-                      }
-                      nestedWebviewController.webviewController
-                          ?.scrollTo(0, y.ceil());
-                    },
-                    child: child,
-                  );
-                },
-                child: WebView(
-                  initialUrl: nestedWebviewController.initialUrl,
-                  onPageStarted: nestedWebviewController.onPageStarted,
-                  onPageFinished: nestedWebviewController.onPageFinished,
-                  onWebResourceError:
-                      nestedWebviewController.onWebResourceError,
-                  onWebViewCreated: nestedWebviewController.onWebViewCreated,
-                  onProgress: nestedWebviewController.onProgress,
-                  javascriptChannels: <JavascriptChannel>{
-                    nestedWebviewController
-                        .scrollHeightNotifierJavascriptChannel
-                  },
-                  javascriptMode: JavascriptMode.unrestricted,
-                ),
-              ),
-              if (webViewStatus != WebViewStatus.completed)
-                SliverFillRemaining(
-                  child: webViewStatus == WebViewStatus.loading
-                      ? Container(
-                          alignment: Alignment.center,
-                          child: Container(
-                            width: 120,
-                            height: 120,
-                            decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.7),
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(8))),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                const SizedBox(
-                                  width: 45.0,
-                                  height: 45.0,
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 14.0,
-                                ),
-                                ValueListenableBuilder<int>(
-                                    valueListenable: nestedWebviewController
-                                        .progressNotifier,
-                                    builder: (BuildContext context,
-                                        int progress, Widget? child) {
-                                      return Text(
-                                        '${(progress / 100 * 100).toInt()}%',
-                                        style: const TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.white,
-                                        ),
-                                      );
-                                    }),
-                              ],
-                            ),
+          return Stack(
+            children: <Widget>[
+              CustomScrollView(
+                controller: scrollController,
+                slivers: <Widget>[
+                  if (webViewStatus == WebViewStatus.completed)
+                    SliverToBoxAdapter(
+                      child: Container(
+                        height: 100,
+                        color: Colors.red,
+                        child: const Center(
+                          child: Text(
+                            'Header',
+                            style: TextStyle(color: Colors.white),
                           ),
-                        )
-                      : Container(
-                          alignment: Alignment.center,
-                          child: const Text('loading failed'),
                         ),
-                ),
-              if (webViewStatus == WebViewStatus.completed)
-                SliverToBoxAdapter(
-                  child: Container(
-                    height: 300,
-                    color: Colors.green,
-                    child: const Center(
-                      child: Text(
-                        'Footer',
-                        style: TextStyle(color: Colors.white),
                       ),
                     ),
+                  ValueListenableBuilder<double>(
+                    valueListenable:
+                        nestedWebviewController.scrollHeightNotifier,
+                    builder: (
+                      BuildContext context,
+                      double scrollHeight,
+                      Widget? child,
+                    ) {
+                      // return SliverToBoxAdapter(
+                      //   child: SizedBox(
+                      //     height: scrollHeight,
+                      //     child: child,
+                      //   ),
+                      // );
+                      return SliverToNestedScrollBoxAdapter(
+                        childExtent: scrollHeight,
+                        onScrollOffsetChanged: (double scrollOffset) {
+                          double y = scrollOffset;
+                          if (Platform.isAndroid) {
+                            // https://github.com/flutter/flutter/issues/75841
+                            y *= window.devicePixelRatio;
+                          }
+                          nestedWebviewController.webviewController
+                              ?.scrollTo(0, y.ceil());
+                        },
+                        child: child,
+                      );
+                    },
+                    child: WebView(
+                      initialUrl: nestedWebviewController.initialUrl,
+                      onPageStarted: nestedWebviewController.onPageStarted,
+                      onPageFinished: nestedWebviewController.onPageFinished,
+                      onWebResourceError:
+                          nestedWebviewController.onWebResourceError,
+                      onWebViewCreated:
+                          nestedWebviewController.onWebViewCreated,
+                      onProgress: nestedWebviewController.onProgress,
+                      javascriptChannels: <JavascriptChannel>{
+                        nestedWebviewController
+                            .scrollHeightNotifierJavascriptChannel
+                      },
+                      javascriptMode: JavascriptMode.unrestricted,
+                    ),
                   ),
-                ),
+                  if (webViewStatus == WebViewStatus.completed)
+                    SliverToBoxAdapter(
+                      child: Container(
+                        height: 300,
+                        color: Colors.green,
+                        child: const Center(
+                          child: Text(
+                            'Footer',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              Container(
+                height: webViewStatus != WebViewStatus.completed
+                    ? double.infinity
+                    : 0,
+                child: webViewStatus == WebViewStatus.loading
+                    ? Container(
+                        alignment: Alignment.center,
+                        child: Container(
+                          width: 120,
+                          height: 120,
+                          decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.7),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(8))),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              const SizedBox(
+                                width: 45.0,
+                                height: 45.0,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 14.0,
+                              ),
+                              ValueListenableBuilder<int>(
+                                  valueListenable:
+                                      nestedWebviewController.progressNotifier,
+                                  builder: (BuildContext context, int progress,
+                                      Widget? child) {
+                                    return Text(
+                                      '${(progress / 100 * 100).toInt()}%',
+                                      style: const TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.white,
+                                      ),
+                                    );
+                                  }),
+                            ],
+                          ),
+                        ),
+                      )
+                    : Container(
+                        alignment: Alignment.center,
+                        child: const Text('loading failed'),
+                      ),
+              ),
             ],
           );
         },

@@ -498,8 +498,12 @@ class RenderSliverToNestedScrollBoxAdapter
       case AxisDirection.down:
         //childParentData.paintOffset = Offset(0.0, -constraints.scrollOffset);
         // zmtzawqlp
-        childParentData.paintOffset =
-            Offset(0.0, min(childExtent - targetEndScrollOffsetForPaint, 0));
+
+        childParentData.paintOffset = Offset(
+            0.0,
+            childExtent <= constraints.viewportMainAxisExtent
+                ? -constraints.scrollOffset
+                : min(childExtent - targetEndScrollOffsetForPaint, 0));
         break;
       case AxisDirection.left:
         assert(false, 'not support for RenderSliverToScrollableBoxAdapter');
