@@ -1,3 +1,7 @@
+## 2.1.1
+
+* Correct assert in RenderSliverToNestedScrollBoxAdapter.setChildParentData
+
 ## 2.1.0
 
 * Add SliverToNestedScrollBoxAdapter/RenderSliverToNestedScrollBoxAdapter to support to nested scroll(like Webview in CustomScrollView/NestedScrollView)

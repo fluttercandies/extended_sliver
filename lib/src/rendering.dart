@@ -485,14 +485,14 @@ class RenderSliverToNestedScrollBoxAdapter
     switch (applyGrowthDirectionToAxisDirection(
         constraints.axisDirection, constraints.growthDirection)) {
       case AxisDirection.up:
-        assert(true, 'not support for RenderSliverToScrollableBoxAdapter');
+        assert(false, 'not support for RenderSliverToScrollableBoxAdapter');
         // childParentData.paintOffset = Offset(
         //     0.0,
         //     -(geometry.scrollExtent -
         //         (geometry.paintExtent + constraints.scrollOffset)));
         break;
       case AxisDirection.right:
-        assert(true, 'not support for RenderSliverToScrollableBoxAdapter');
+        assert(false, 'not support for RenderSliverToScrollableBoxAdapter');
         //childParentData.paintOffset = Offset(-constraints.scrollOffset, 0.0);
         break;
       case AxisDirection.down:
@@ -502,7 +502,7 @@ class RenderSliverToNestedScrollBoxAdapter
             Offset(0.0, min(childExtent - targetEndScrollOffsetForPaint, 0));
         break;
       case AxisDirection.left:
-        assert(true, 'not support for RenderSliverToScrollableBoxAdapter');
+        assert(false, 'not support for RenderSliverToScrollableBoxAdapter');
         // childParentData.paintOffset = Offset(
         //     -(geometry.scrollExtent -
         //         (geometry.paintExtent + constraints.scrollOffset)),
