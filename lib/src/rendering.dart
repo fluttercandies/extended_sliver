@@ -463,11 +463,10 @@ class RenderSliverToNestedScrollBoxAdapter
 
   @override
   void paint(PaintingContext context, Offset offset) {
-    // maybe overscroll in ios
-    final double targetEndScrollOffsetForPaint =
-        constraints.scrollOffset + constraints.remainingPaintExtent;
-    if (targetEndScrollOffsetForPaint <= childExtent) {
-      onScrollOffsetChanged(constraints.scrollOffset);
+    if (childExtent > constraints.viewportMainAxisExtent) {
+      // maybe overscroll in ios
+      onScrollOffsetChanged(math.min(constraints.scrollOffset,
+          childExtent - constraints.viewportMainAxisExtent));
     }
     super.paint(context, offset);
   }

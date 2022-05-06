@@ -1,3 +1,7 @@
+## 2.1.3
+
+* Improve the moment call onScrollOffsetChanged  
+
 ## 2.1.2
 
 * Correct paintOffset when childExtent <= viewportMainAxisExtent (RenderSliverToNestedScrollBoxAdapter)
