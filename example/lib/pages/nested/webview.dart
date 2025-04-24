@@ -98,21 +98,7 @@ class NestedWebviewDemo extends StatelessWidget {
                         child: child,
                       );
                     },
-                    child: WebView(
-                      initialUrl: nestedWebviewController.initialUrl,
-                      onPageStarted: nestedWebviewController.onPageStarted,
-                      onPageFinished: nestedWebviewController.onPageFinished,
-                      onWebResourceError:
-                          nestedWebviewController.onWebResourceError,
-                      onWebViewCreated:
-                          nestedWebviewController.onWebViewCreated,
-                      onProgress: nestedWebviewController.onProgress,
-                      javascriptChannels: <JavascriptChannel>{
-                        nestedWebviewController
-                            .scrollHeightNotifierJavascriptChannel
-                      },
-                      javascriptMode: JavascriptMode.unrestricted,
-                    ),
+                    child: WebViewWidget(controller:nestedWebviewController._webviewController),
                   ),
                   if (webViewStatus == WebViewStatus.completed)
                     SliverToBoxAdapter(
@@ -189,50 +175,33 @@ class NestedWebviewDemo extends StatelessWidget {
 }
 
 class NestedWebviewController {
-  NestedWebviewController(this.initialUrl);
-
-  final String initialUrl;
-
-  WebViewController? _webviewController;
-
-  WebViewController? get webviewController => _webviewController;
-
-  ValueNotifier<double> scrollHeightNotifier = ValueNotifier<double>(1);
-  ValueNotifier<WebViewStatus> webViewStatusNotifier =
-      ValueNotifier<WebViewStatus>(WebViewStatus.loading);
-
-  ValueNotifier<int> progressNotifier = ValueNotifier<int>(0);
-
-  void onWebViewCreated(WebViewController controller) {
-    _webviewController = controller;
-  }
-
-  void onPageStarted(String url) {
-    if (url == initialUrl ||
-        webViewStatusNotifier.value == WebViewStatus.failed) {
-      webViewStatusNotifier.value = WebViewStatus.loading;
-    }
-  }
-
-  void onPageFinished(String url) {
-    if (webViewStatusNotifier.value != WebViewStatus.failed) {
-      //webViewStatusNotifier.value = WebViewStatus.completed;
-      _webviewController?.runJavascript(scrollHeightJs);
-    }
-  }
-
-  void onWebResourceError(WebResourceError error) {
-    webViewStatusNotifier.value = WebViewStatus.failed;
-  }
-
-  void onProgress(int progress) {
-    progressNotifier.value = progress;
-  }
-
-  JavascriptChannel get scrollHeightNotifierJavascriptChannel =>
-      JavascriptChannel(
-        name: 'ScrollHeightNotifier',
-        onMessageReceived: (JavascriptMessage message) {
+  NestedWebviewController(this.initialUrl){
+    _webviewController = 
+    WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onProgress: (int progress) {
+            progressNotifier.value = progress;
+          },
+          onPageFinished: (String url) {
+            if (webViewStatusNotifier.value != WebViewStatus.failed) {
+              _webviewController?.runJavaScript(scrollHeightJs);
+            }
+            webViewStatusNotifier.value = WebViewStatus.completed;
+          },
+          onWebResourceError: (WebResourceError error) {
+            //webViewStatusNotifier.value = WebViewStatus.failed;
+          },
+          onPageStarted: (String url) {
+            if (url == initialUrl ||
+                webViewStatusNotifier.value == WebViewStatus.failed) {
+              webViewStatusNotifier.value = WebViewStatus.loading;
+            }
+          }
+        )
+      )
+      ..addJavaScriptChannel('ScrollHeightNotifier', onMessageReceived: (JavaScriptMessage message) {
           final String msg = message.message;
           final double? height = double.tryParse(msg);
           if (height != null) {
@@ -240,8 +209,21 @@ class NestedWebviewController {
 
             webViewStatusNotifier.value = WebViewStatus.completed;
           }
-        },
-      );
+        })
+      ..loadRequest(Uri.parse(initialUrl));
+  }
+
+  final String initialUrl;
+
+  late WebViewController _webviewController;
+
+  WebViewController get webviewController => _webviewController;
+
+  ValueNotifier<double> scrollHeightNotifier = ValueNotifier<double>(1);
+  ValueNotifier<WebViewStatus> webViewStatusNotifier =
+      ValueNotifier<WebViewStatus>(WebViewStatus.loading);
+
+  ValueNotifier<int> progressNotifier = ValueNotifier<int>(0);
 }
 
 enum WebViewStatus {
